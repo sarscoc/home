@@ -7,7 +7,148 @@
 
 <title>Character Home</title>
 
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+
+margin:0;
+
+background:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:100vh;
+
+font-family:sans-serif;
+
+}
+
+
+
+/* ゲーム画面 */
+
+#game{
+
+width:900px;
+
+height:506px;
+
+border:2px solid #ddd;
+
+position:relative;
+
+overflow:hidden;
+
+background:white;
+
+}
+
+
+
+/* キャラ */
+
+#character{
+
+position:absolute;
+
+bottom:0;
+
+left:350px;
+
+width:250px;
+
+}
+
+
+
+/* 台詞 */
+
+#message{
+
+position:absolute;
+
+background:rgba(255,255,255,.9);
+
+padding:15px 25px;
+
+border-radius:30px;
+
+box-shadow:0 5px 20px #0002;
+
+font-size:20px;
+
+animation:pop .3s;
+
+}
+
+
+
+@keyframes pop{
+
+from{
+
+transform:translateY(20px);
+
+opacity:0;
+
+}
+
+to{
+
+transform:none;
+
+opacity:1;
+
+}
+
+}
+
+
+
+/* 判定 */
+
+.area{
+
+position:absolute;
+
+}
+
+
+
+#head{
+
+left:420px;
+
+top:100px;
+
+width:100px;
+
+height:100px;
+
+}
+
+
+
+#body{
+
+left:380px;
+
+top:250px;
+
+width:200px;
+
+height:150px;
+
+}
+
+
+
+</style>
 
 </head>
 
@@ -18,90 +159,248 @@
 <div id="game">
 
 
-<!-- ホーム -->
-
-<div id="home">
+<img id="character" src="images/143.png">
 
 
-<div id="date"></div>
+<div id="head" class="area"></div>
+
+<div id="body" class="area"></div>
 
 
-<img id="character"
-src="images/character001.png">
-
-
-<div id="message">
-こんにちは。
-</div>
-
-
-<!-- タッチ範囲 -->
-
-<div id="head"></div>
-
-<div id="body"></div>
-
-
-
-<button id="characterBtn">
-キャラ一覧
-</button>
-
-
-<button id="backgroundBtn">
-背景変更
-</button>
-
+<div id="message"></div>
 
 
 </div>
 
 
 
-<!-- キャラ選択 -->
-
-<div id="characterMenu">
-
-<div id="iconGrid"></div>
-
-</div>
+<script>
 
 
-
-<!-- 背景選択 -->
-
-<div id="backgroundMenu">
-
-<div class="bgChoice"
-onclick="changeBackground('images/bg1.jpg')">
-背景1
-</div>
+const talks={
 
 
-<div class="bgChoice"
-onclick="changeBackground('images/bg2.jpg')">
-背景2
-</div>
+greeting:[
+
+"来たか。"
+
+],
 
 
-<div class="bgChoice"
-onclick="changeBackground('images/bg3.jpg')">
-背景3
-</div>
+normal:[
+
+"どうした？",
+
+"何か用か？",
+
+"暇なのか？"
+
+],
 
 
-<button id="closeBG">
-戻る
-</button>
+head:[
+
+"そこを触るのか",
+
+"まだ触るのか？",
+
+"……しつこいな。"
+
+],
 
 
-</div>
+body:[
+
+"近いな",
+
+"何をしている？",
+
+"そろそろ離れろ。"
+
+],
 
 
-</div>
+fast:[
+
+"連打するな。",
+
+"落ち着け。"
+
+]
 
 
-<script src="script.js"></script>
+};
+
+
+
+let count={
+
+normal:0,
+
+head:0,
+
+body:0
+
+};
+
+
+
+let lastClick=0;
+
+
+
+const message=
+document.getElementById("message");
+
+
+
+function speak(text,x,y){
+
+
+message.innerText=text;
+
+
+message.style.left=x+"px";
+
+message.style.top=y+"px";
+
+
+}
+
+
+
+function selectTalk(type,x,y){
+
+
+count[type]++;
+
+
+let arr=talks[type];
+
+
+let index=
+Math.min(
+count[type]-1,
+arr.length-1
+);
+
+
+speak(
+arr[index],
+x,
+y
+);
+
+
+}
+
+
+
+
+/* 起動挨拶 */
+
+setTimeout(()=>{
+
+speak(
+talks.greeting[0],
+450,
+120
+);
+
+},500);
+
+
+
+
+
+game.onclick=function(e){
+
+
+const now=Date.now();
+
+
+let type="normal";
+
+
+
+/* 連打 */
+
+if(now-lastClick<400){
+
+type="fast";
+
+}
+
+lastClick=now;
+
+
+
+
+let rect=
+game.getBoundingClientRect();
+
+
+let x=e.clientX-rect.left;
+
+let y=e.clientY-rect.top;
+
+
+
+if(
+x>420 &&
+x<520 &&
+y>100 &&
+y<200
+){
+
+type="head";
+
+}
+
+
+else if(
+x>380 &&
+x<580 &&
+y>250 &&
+y<400
+){
+
+type="body";
+
+}
+
+
+
+if(type==="fast"){
+
+speak(
+talks.fast[
+Math.floor(
+Math.random()*talks.fast.length
+)
+],
+x,
+y
+);
+
+}
+
+else{
+
+selectTalk(
+type,
+x,
+y
+);
+
+}
+
+
+};
+
+
+</script>
+
 
 </body>
 
