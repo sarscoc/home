@@ -5,62 +5,46 @@
 
 <meta charset="UTF-8">
 
-<title>Character Home</title>
-
+<title>Character Game</title>
 
 <style>
 
 body{
-
-margin:0;
-
-background:white;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-height:100vh;
-
-font-family:sans-serif;
-
+    margin:0;
+    background:white;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:sans-serif;
 }
-
 
 
 /* ゲーム画面 */
 
 #game{
 
-width:900px;
+    width:900px;
+    height:506px;
 
-height:506px;
+    border:2px solid #ddd;
 
-border:2px solid #ddd;
+    position:relative;
+    overflow:hidden;
 
-position:relative;
-
-overflow:hidden;
-
-background:white;
+    background:white;
 
 }
 
 
 
-/* キャラ */
+/* キャラ画像 */
 
 #character{
 
-position:absolute;
+    position:absolute;
 
-bottom:0;
-
-left:350px;
-
-width:250px;
+    user-select:none;
 
 }
 
@@ -70,19 +54,21 @@ width:250px;
 
 #message{
 
-position:absolute;
+    position:absolute;
 
-background:rgba(255,255,255,.9);
+    display:none;
 
-padding:15px 25px;
+    background:white;
 
-border-radius:30px;
+    padding:15px 25px;
 
-box-shadow:0 5px 20px #0002;
+    border-radius:30px;
 
-font-size:20px;
+    box-shadow:0 5px 20px #0002;
 
-animation:pop .3s;
+    font-size:20px;
+
+    animation:pop .25s;
 
 }
 
@@ -92,60 +78,21 @@ animation:pop .3s;
 
 from{
 
-transform:translateY(20px);
-
 opacity:0;
+
+transform:translateY(20px);
 
 }
 
 to{
 
-transform:none;
-
 opacity:1;
 
-}
+transform:none;
 
 }
 
-
-
-/* 判定 */
-
-.area{
-
-position:absolute;
-
 }
-
-
-
-#head{
-
-left:420px;
-
-top:100px;
-
-width:100px;
-
-height:100px;
-
-}
-
-
-
-#body{
-
-left:380px;
-
-top:250px;
-
-width:200px;
-
-height:150px;
-
-}
-
 
 
 </style>
@@ -158,17 +105,9 @@ height:150px;
 
 <div id="game">
 
-
-<img id="character" src="images/143.png">
-
-
-<div id="head" class="area"></div>
-
-<div id="body" class="area"></div>
-
+<img id="character">
 
 <div id="message"></div>
-
 
 </div>
 
@@ -177,84 +116,114 @@ height:150px;
 <script>
 
 
-const talks={
+let data;
 
 
-greeting:[
-
-"来たか。"
-
-],
-
-
-normal:[
-
-"どうした？",
-
-"何か用か？",
-
-"暇なのか？"
-
-],
-
-
-head:[
-
-"そこを触るのか",
-
-"まだ触るのか？",
-
-"……しつこいな。"
-
-],
-
-
-body:[
-
-"近いな",
-
-"何をしている？",
-
-"そろそろ離れろ。"
-
-],
-
-
-fast:[
-
-"連打するな。",
-
-"落ち着け。"
-
-]
-
-
-};
-
-
-
-let count={
-
-normal:0,
-
-head:0,
-
-body:0
-
-};
-
+let count={};
 
 
 let lastClick=0;
 
 
 
-const message=
+const game =
+document.getElementById("game");
+
+
+const character =
+document.getElementById("character");
+
+
+const message =
 document.getElementById("message");
 
 
 
-function speak(text,x,y){
+
+
+/*
+キャラ読み込み
+*/
+
+fetch("characters/143.json")
+
+.then(res=>res.json())
+
+.then(json=>{
+
+
+data=json;
+
+
+loadCharacter();
+
+
+showGreeting();
+
+
+});
+
+
+
+
+
+
+function loadCharacter(){
+
+
+let p=data.position;
+
+
+character.src=
+"images/"+data.image;
+
+
+
+character.style.left=
+p.x+"px";
+
+
+character.style.top=
+p.y+"px";
+
+
+character.style.width=
+p.scale+"px";
+
+
+}
+
+
+
+
+
+
+function showGreeting(){
+
+
+if(
+data.talk.greeting &&
+data.talk.greeting.length
+){
+
+showTalk(
+data.talk.greeting[0].text,
+450,
+100
+);
+
+}
+
+
+}
+
+
+
+
+
+
+
+function showTalk(text,x,y){
 
 
 message.innerText=text;
@@ -262,52 +231,75 @@ message.innerText=text;
 
 message.style.left=x+"px";
 
+
 message.style.top=y+"px";
 
 
-}
+message.style.display="block";
 
 
-
-function selectTalk(type,x,y){
-
-
-count[type]++;
-
-
-let arr=talks[type];
-
-
-let index=
-Math.min(
-count[type]-1,
-arr.length-1
-);
-
-
-speak(
-arr[index],
-x,
-y
-);
-
-
-}
-
-
-
-
-/* 起動挨拶 */
 
 setTimeout(()=>{
 
-speak(
-talks.greeting[0],
-450,
-120
+message.style.display="none";
+
+},2500);
+
+
+}
+
+
+
+
+
+
+function inside(x,y,area){
+
+
+return (
+
+x >= area.x &&
+x <= area.x + area.width &&
+
+y >= area.y &&
+y <= area.y + area.height
+
 );
 
-},500);
+
+}
+
+
+
+
+
+
+
+function getArea(x,y){
+
+
+for(
+let area of data.areas
+){
+
+
+if(
+inside(x,y,area)
+){
+
+return area;
+
+}
+
+}
+
+
+return null;
+
+
+}
+
+
 
 
 
@@ -316,87 +308,135 @@ talks.greeting[0],
 game.onclick=function(e){
 
 
-const now=Date.now();
+let rect=
+game.getBoundingClientRect();
 
 
-let type="normal";
+let x=
+e.clientX-rect.left;
+
+
+let y=
+e.clientY-rect.top;
 
 
 
-/* 連打 */
+let now=Date.now();
 
-if(now-lastClick<400){
 
-type="fast";
+let rapid=
+(now-lastClick<400);
 
-}
 
 lastClick=now;
 
 
 
 
-let rect=
-game.getBoundingClientRect();
+let talkList;
 
 
-let x=e.clientX-rect.left;
-
-let y=e.clientY-rect.top;
 
 
+/*
+連打
+*/
 
 if(
-x>420 &&
-x<520 &&
-y>100 &&
-y<200
+
+rapid &&
+
+data.talk.rapid &&
+
+data.talk.rapid.length
+
 ){
 
-type="head";
+talkList=data.talk.rapid;
 
 }
 
 
-else if(
-x>380 &&
-x<580 &&
-y>250 &&
-y<400
-){
+/*
+エリア
+*/
 
-type="body";
-
-}
+else{
 
 
+let area=
+getArea(x,y);
 
-if(type==="fast"){
 
-speak(
-talks.fast[
-Math.floor(
-Math.random()*talks.fast.length
-)
-],
-x,
-y
-);
+
+if(area){
+
+talkList=area.talk;
 
 }
 
 else{
 
-selectTalk(
-type,
-x,
-y
-);
+talkList=data.talk.normal;
 
 }
 
 
+}
+
+
+
+
+/*
+回数管理
+
+台詞数はキャラデータ依存
+
+*/
+
+
+let key=talkList;
+
+
+if(!count[key]){
+
+count[key]=0;
+
+}
+
+
+let index=count[key];
+
+
+
+if(index >= talkList.length){
+
+index=talkList.length-1;
+
+}
+
+else{
+
+count[key]++;
+
+}
+
+
+
+showTalk(
+
+talkList[index].text,
+
+x,
+
+y
+
+);
+
+
+
 };
+
 
 
 </script>
