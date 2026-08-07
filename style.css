@@ -1,49 +1,276 @@
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
+
 
 
 body{
 
-  margin:0;
+margin:0;
 
-  width:100vw;
-  height:100vh;
+width:100vw;
+height:100vh;
 
-  background:#ffffff;
+background:white;
 
-  overflow:hidden;
+display:flex;
 
-  display:flex;
+align-items:center;
 
-  justify-content:center;
+justify-content:center;
 
-  align-items:center;
-
-  font-family:sans-serif;
+font-family:sans-serif;
 
 }
 
 
 
-/* 16:9ゲーム画面 */
+/* 16:9 */
 
 #game{
 
-  width:100vw;
+width:min(90vw,1200px);
 
-  height:56.25vw;
-
-  max-height:100vh;
-
-  aspect-ratio:16 / 9;
+aspect-ratio:16 / 9;
 
 
-  background:#fafafa;
+background:white;
 
 
-  position:relative;
+border:3px solid #ddd;
 
-  overflow:hidden;
+border-radius:20px;
+
+
+overflow:hidden;
+
+position:relative;
+
+
+background-size:cover;
+
+background-position:center;
+
+}
+
+
+
+#home,
+#characterMenu,
+#backgroundMenu{
+
+width:100%;
+
+height:100%;
+
+position:absolute;
+
+}
+
+
+
+
+/* キャラ */
+
+
+#character{
+
+position:absolute;
+
+bottom:0;
+
+left:50%;
+
+transform:translateX(-50%);
+
+height:90%;
+
+}
+
+
+
+/* 台詞 */
+
+#message{
+
+position:absolute;
+
+bottom:8%;
+
+left:50%;
+
+transform:translateX(-50%);
+
+width:60%;
+
+padding:20px;
+
+background:#ffffffcc;
+
+border-radius:20px;
+
+text-align:center;
+
+font-size:22px;
+
+}
+
+
+
+/* タッチ */
+
+#head{
+
+position:absolute;
+
+top:15%;
+
+left:45%;
+
+width:120px;
+
+height:100px;
+
+cursor:pointer;
+
+}
+
+
+#body{
+
+position:absolute;
+
+top:40%;
+
+left:40%;
+
+width:200px;
+
+height:170px;
+
+cursor:pointer;
+
+}
+
+
+
+/* ボタン */
+
+button{
+
+padding:12px 25px;
+
+border:none;
+
+border-radius:30px;
+
+background:white;
+
+cursor:pointer;
+
+}
+
+
+
+#characterBtn{
+
+position:absolute;
+
+right:30px;
+
+bottom:30px;
+
+}
+
+
+
+#backgroundBtn{
+
+position:absolute;
+
+right:180px;
+
+bottom:30px;
+
+}
+
+
+
+/* キャラ一覧 */
+
+
+#characterMenu{
+
+display:none;
+
+background:white;
+
+padding:20px;
+
+}
+
+
+
+#iconGrid{
+
+display:grid;
+
+grid-template-columns:repeat(10,1fr);
+
+gap:10px;
+
+height:100%;
+
+}
+
+
+
+.icon{
+
+background:#eee;
+
+border-radius:12px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:35px;
+
+cursor:pointer;
+
+}
+
+
+
+/* 背景 */
+
+#backgroundMenu{
+
+display:none;
+
+background:white;
+
+padding:30px;
+
+}
+
+
+
+.bgChoice{
+
+display:inline-block;
+
+padding:30px;
+
+margin:10px;
+
+background:#eee;
+
+cursor:pointer;
+
+border-radius:20px;
 
 }
