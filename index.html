@@ -2,9 +2,13 @@
 <html lang="ja">
 
 <head>
+
 <meta charset="UTF-8">
+
 <title>Character Home</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 
@@ -16,14 +20,14 @@
 
 <!-- ホーム -->
 
-<section id="home">
-
-<div class="date"></div>
+<div id="home">
 
 
-<div id="character">
-🙂
-</div>
+<div id="date"></div>
+
+
+<img id="character"
+src="images/character001.png">
 
 
 <div id="message">
@@ -31,32 +35,67 @@
 </div>
 
 
-<div id="touchHead"></div>
-<div id="touchBody"></div>
+<!-- タッチ範囲 -->
+
+<div id="head"></div>
+
+<div id="body"></div>
 
 
-<button id="openSelect">
-キャラ選択
+
+<button id="characterBtn">
+キャラ一覧
 </button>
 
-</section>
+
+<button id="backgroundBtn">
+背景変更
+</button>
+
+
+
+</div>
 
 
 
 <!-- キャラ選択 -->
 
-<section id="select">
+<div id="characterMenu">
 
-<div id="grid"></div>
+<div id="iconGrid"></div>
+
+</div>
 
 
-<button id="back">
+
+<!-- 背景選択 -->
+
+<div id="backgroundMenu">
+
+<div class="bgChoice"
+onclick="changeBackground('images/bg1.jpg')">
+背景1
+</div>
+
+
+<div class="bgChoice"
+onclick="changeBackground('images/bg2.jpg')">
+背景2
+</div>
+
+
+<div class="bgChoice"
+onclick="changeBackground('images/bg3.jpg')">
+背景3
+</div>
+
+
+<button id="closeBG">
 戻る
 </button>
 
 
-</section>
-
+</div>
 
 
 </div>
@@ -65,4 +104,5 @@
 <script src="script.js"></script>
 
 </body>
+
 </html>
