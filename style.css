@@ -1,239 +1,49 @@
 *{
-box-sizing:border-box;
+  box-sizing:border-box;
 }
 
 
 body{
 
-margin:0;
+  margin:0;
 
-height:100vh;
+  width:100vw;
+  height:100vh;
 
-background:#111;
+  background:#ffffff;
 
-display:flex;
+  overflow:hidden;
 
-align-items:center;
+  display:flex;
 
-justify-content:center;
+  justify-content:center;
 
-font-family:sans-serif;
+  align-items:center;
+
+  font-family:sans-serif;
 
 }
 
 
+
+/* 16:9ゲーム画面 */
 
 #game{
 
-width:min(90vw,1200px);
+  width:100vw;
 
-aspect-ratio:16/9;
+  height:56.25vw;
 
-background:
-linear-gradient(
-135deg,
-#faf7f2,
-#dce8f2
-);
+  max-height:100vh;
 
-border-radius:20px;
+  aspect-ratio:16 / 9;
 
-overflow:hidden;
 
-position:relative;
+  background:#fafafa;
 
-box-shadow:0 20px 50px #0008;
 
-}
+  position:relative;
 
-
-
-section{
-
-width:100%;
-
-height:100%;
-
-position:absolute;
-
-}
-
-
-
-/* ホーム */
-
-.date{
-
-position:absolute;
-
-top:25px;
-
-left:30px;
-
-}
-
-
-
-#character{
-
-position:absolute;
-
-bottom:0;
-
-left:50%;
-
-transform:translateX(-50%);
-
-font-size:260px;
-
-}
-
-
-
-#message{
-
-position:absolute;
-
-bottom:80px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-background:#ffffffcc;
-
-padding:20px;
-
-border-radius:20px;
-
-width:60%;
-
-text-align:center;
-
-font-size:22px;
-
-}
-
-
-
-/* タッチ範囲 */
-
-#touchHead{
-
-position:absolute;
-
-top:100px;
-
-left:45%;
-
-width:120px;
-
-height:100px;
-
-}
-
-
-
-#touchBody{
-
-position:absolute;
-
-top:300px;
-
-left:40%;
-
-width:200px;
-
-height:160px;
-
-}
-
-
-
-button{
-
-border:none;
-
-background:white;
-
-padding:15px 35px;
-
-border-radius:30px;
-
-cursor:pointer;
-
-font-size:18px;
-
-}
-
-
-
-#openSelect{
-
-position:absolute;
-
-right:30px;
-
-bottom:30px;
-
-}
-
-
-
-/* 選択画面 */
-
-
-#select{
-
-display:none;
-
-padding:30px;
-
-text-align:center;
-
-}
-
-
-
-#grid{
-
-display:grid;
-
-grid-template-columns:repeat(6,80px);
-
-gap:15px;
-
-justify-content:center;
-
-}
-
-
-
-.icon{
-
-width:80px;
-
-height:80px;
-
-background:white;
-
-border-radius:15px;
-
-font-size:40px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-cursor:pointer;
-
-}
-
-
-#back{
-
-margin-top:30px;
+  overflow:hidden;
 
 }
