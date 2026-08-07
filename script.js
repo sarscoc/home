@@ -2,6 +2,9 @@ const characters=[
 
 {
 icon:"🙂",
+
+image:"images/character001.png",
+
 mode:"many",
 
 head:[
@@ -23,6 +26,9 @@ repeat:[
 
 {
 icon:"😎",
+
+image:"images/character002.png",
+
 mode:"once",
 
 head:[
@@ -33,26 +39,6 @@ body:[
 "用があるなら言え。"
 ]
 
-},
-
-
-{
-icon:"👹",
-mode:"angry",
-
-head:[
-"頭だぞ。"
-],
-
-body:[
-"何をしている。"
-],
-
-repeat:[
-"落ち着きたまえ。",
-"いい加減にしろ。"
-]
-
 }
 
 ];
@@ -61,22 +47,22 @@ repeat:[
 
 let current=0;
 
+
 let count={
+
 head:0,
+
 body:0
+
 };
 
 
 
-const home=document.getElementById("home");
-const select=document.getElementById("select");
+function loadCharacter(){
 
+let c=characters[current];
 
-function showCharacter(){
-
-document.getElementById("character")
-.innerText=
-characters[current].icon;
+document.getElementById("character").src=c.image;
 
 }
 
@@ -90,84 +76,62 @@ let c=characters[current];
 count[type]++;
 
 
-let list;
-
-
 if(
 c.mode==="once"
 &&
 count[type]>1
-){
-
+)
 return;
 
-}
 
+
+let words;
 
 
 if(
-c.mode==="angry"
-&&
 count[type]>=3
+&&
+c.repeat
 ){
 
-list=c.repeat;
+words=c.repeat;
 
 }else{
 
-list=c[type];
+words=c[type];
 
 }
 
 
 document.getElementById("message")
 .innerText=
-list[Math.floor(Math.random()*list.length)];
+words[
+Math.floor(Math.random()*words.length)
+];
 
 }
 
 
 
-
-document.getElementById("touchHead")
-.onclick=
-()=>talk("head");
+document.getElementById("head")
+.onclick=()=>talk("head");
 
 
-document.getElementById("touchBody")
-.onclick=
-()=>talk("body");
+document.getElementById("body")
+.onclick=()=>talk("body");
 
 
 
 
 
-document.getElementById("openSelect")
-.onclick=()=>{
-
-home.style.display="none";
-
-select.style.display="block";
-
-};
+/* キャラ一覧 */
 
 
-
-document.getElementById("back")
-.onclick=()=>{
-
-select.style.display="none";
-
-home.style.display="block";
-
-};
-
-
-
-const grid=document.getElementById("grid");
+const grid=document.getElementById("iconGrid");
 
 
 characters.forEach((c,i)=>{
+
 
 let div=document.createElement("div");
 
@@ -178,33 +142,66 @@ div.innerText=c.icon;
 
 div.onclick=()=>{
 
+
 current=i;
 
-count={
-head:0,
-body:0
-};
+count={head:0,body:0};
 
-showCharacter();
+loadCharacter();
 
-select.style.display="none";
 
-home.style.display="block";
+document.getElementById("characterMenu")
+.style.display="none";
+
 
 };
 
 
 grid.appendChild(div);
 
+
 });
 
 
 
-const d=new Date();
-
-document.querySelector(".date")
-.innerText=
-`${d.getMonth()+1}/${d.getDate()}`;
 
 
-showCharacter();
+document.getElementById("characterBtn")
+.onclick=()=>{
+
+document.getElementById("characterMenu")
+.style.display="block";
+
+};
+
+
+
+document.getElementById("backgroundBtn")
+.onclick=()=>{
+
+document.getElementById("backgroundMenu")
+.style.display="block";
+
+};
+
+
+
+
+
+document.getElementById("closeBG")
+.onclick=()=>{
+
+document.getElementById("backgroundMenu")
+.style.display="none";
+
+};
+
+
+
+
+function changeBackground(img){
+
+document.getElementById("game")
+.style.backgroundImage=`url(${img})`;
+
+}
