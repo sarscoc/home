@@ -288,9 +288,9 @@ async function buildCfItem(dataSource, today) {
   const fumbleRate = total ? (fumble / total * 100) : 0;
 
   return {
-    text: `SARS LAND ✦ ${today.year} C/F RECORD ─ CRITICAL ${criticalRate.toFixed(1)}% / FUMBLE ${fumbleRate.toFixed(1)}%`,
+    text: `${today.year} C/F RECORD ─ CRITICAL ${criticalRate.toFixed(1)}% / FUMBLE ${fumbleRate.toFixed(1)}%`,
     url: DATABASES.cf.publicUrl,
-    separatorBefore: '',
+    separatorBefore: '✦',
   };
 }
 
@@ -363,6 +363,7 @@ async function main() {
   ]);
 
   const items = [];
+  items.push({ text: 'SARS LAND', url: '', separatorBefore: '' });
   items.push(await buildCfItem(cfDataSource, today));
 
   const birthdays = await buildBirthdayItems(birthdayDataSource, warnings);
