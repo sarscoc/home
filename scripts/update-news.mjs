@@ -15,7 +15,8 @@ const DATABASES = {
     expectedProperties: ['日付', 'タグ'],
   },
   sessions: {
-    id: 'bceac129a3c94f009f6fa23234167bb9',
+    id: '5664bd829fdf41ea947d8e9a185ff336',
+    publicUrl: 'https://sarsland.notion.site/5664bd829fdf41ea947d8e9a185ff336?v=01dbf98ef9234f52a97e5c19fedaed08&pvs=73',
     expectedProperties: ['DATE', 'ᴋᴇᴇᴘᴇʀ', 'ᴘʟᴀʏᴇʀ', 'ᴄᴏɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀꜱ', 'ɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀ'],
   },
   birthdays: {
@@ -54,18 +55,96 @@ function dashedId(id) {
   return `${s.slice(0, 8)}-${s.slice(8, 12)}-${s.slice(12, 16)}-${s.slice(16, 20)}-${s.slice(20)}`;
 }
 
-async function findDataSource(databaseConfig) {
-  const db = await notion(`/databases/${dashedId(databaseConfig.id)}`);
+async function listAllBlockChildren(blockId) {
+  const results = [];
+  let start_cursor;
+  do {
+    const params = new URLSearchParams({ page_size: '100' });
+    if (start_cursor) params.set('start_cursor', start_cursor);
+    const response = await notion(`/blocks/${blockId}/children?${params.toString()}`);
+    results.push(...(response.results || []));
+    start_cursor = response.has_more ? response.next_cursor : null;
+  } while (start_cursor);
+  return results;
+}
+
+async function findChildDatabases(rootBlockId, maxDepth = 6) {
+  const found = [];
+  const seen = new Set();
+
+  async function walk(blockId, depth) {
+    if (depth > maxDepth || seen.has(blockId)) return;
+    seen.add(blockId);
+
+    const children = await listAllBlockChildren(blockId);
+    for (const block of children) {
+      if (block.type === 'child_database') {
+        found.push({
+          id: block.id,
+          title: block.child_database?.title || '',
+        });
+      }
+      if (block.has_children && block.type !== 'child_database') {
+        await walk(block.id, depth + 1);
+      }
+    }
+  }
+
+  await walk(dashedId(rootBlockId), 0);
+  return found;
+}
+
+async function scoreDatabase(databaseId, databaseConfig) {
+  const db = await notion(`/databases/${dashedId(databaseId)}`);
   const sources = Array.isArray(db.data_sources) ? db.data_sources : [];
-  if (!sources.length) throw new Error(`Database ${databaseConfig.id} に data source が見つかりません。`);
+  if (!sources.length) return null;
 
   let best = null;
   for (const source of sources) {
     const schema = await notion(`/data_sources/${source.id}`);
     const propertyNames = new Set(Object.keys(schema.properties || {}));
     const score = databaseConfig.expectedProperties.filter(name => propertyNames.has(name)).length;
-    if (!best || score > best.score) best = { id: source.id, schema, score };
+    if (!best || score > best.score) {
+      best = { id: source.id, schema, score, databaseId: db.id };
+    }
   }
+  return best;
+}
+
+async function findDataSource(databaseConfig) {
+  // まずURL由来のIDを「データベースID」として試す。
+  try {
+    const direct = await scoreDatabase(databaseConfig.id, databaseConfig);
+    if (direct) return direct;
+  } catch (error) {
+    const message = String(error?.message || error);
+    // Notionが「これはpageです」と返した場合は、ページ内のinline databaseを探す。
+    if (!/is a page, not a database/i.test(message)) throw error;
+    console.log(`Notion page ${databaseConfig.id} 内のデータベースを探索します。`);
+  }
+
+  const childDatabases = await findChildDatabases(databaseConfig.id);
+  if (!childDatabases.length) {
+    throw new Error(`Notion page ${databaseConfig.id} 内に child database が見つかりません。`);
+  }
+
+  let best = null;
+  for (const candidate of childDatabases) {
+    try {
+      const scored = await scoreDatabase(candidate.id, databaseConfig);
+      if (!scored) continue;
+      scored.databaseTitle = candidate.title;
+      if (!best || scored.score > best.score) best = scored;
+    } catch (error) {
+      console.warn(`child database ${candidate.id} (${candidate.title}) は利用できません: ${error.message}`);
+    }
+  }
+
+  if (!best) {
+    throw new Error(`Notion page ${databaseConfig.id} 内のデータベースから data source を取得できませんでした。`);
+  }
+
+  console.log(`ページ内DBを採用: ${best.databaseTitle || best.databaseId} / property match ${best.score}`);
   return best;
 }
 
