@@ -1,0 +1,16 @@
+{
+  "textStyle": {
+    "color": "#ffffff",
+    "size": 16,
+    "font": "gothic"
+  },
+  "id": "97_costume03",
+  "name": "水着",
+  "dialogueSource": 97,
+  "image": "97_costume03.webp",
+  "position": {
+    "x": 846,
+    "y": 1689,
+    "scale": 790
+  }
+}

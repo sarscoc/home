@@ -1,0 +1,16 @@
+{
+  "textStyle": {
+    "color": "#ffffff",
+    "size": 16,
+    "font": "gothic"
+  },
+  "id": "97_costume02",
+  "name": "パーカー",
+  "dialogueSource": 97,
+  "image": "97_costume02.webp",
+  "position": {
+    "x": 966,
+    "y": 1772,
+    "scale": 815
+  }
+}
