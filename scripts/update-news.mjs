@@ -288,7 +288,7 @@ async function buildCfItem(dataSource, today) {
   const fumbleRate = total ? (fumble / total * 100) : 0;
 
   return {
-    text: `${today.year} C/F RECORD ・・・ CRITICAL ${criticalRate.toFixed(1)}% / FUMBLE ${fumbleRate.toFixed(1)}%`,
+    text: `SARS LAND ✦ ${today.year} C/F RECORD ─ CRITICAL ${criticalRate.toFixed(1)}% / FUMBLE ${fumbleRate.toFixed(1)}%`,
     url: DATABASES.cf.publicUrl,
     separatorBefore: '',
   };
@@ -366,15 +366,27 @@ async function main() {
   items.push(await buildCfItem(cfDataSource, today));
 
   const birthdays = await buildBirthdayItems(birthdayDataSource, warnings);
+  items.push({ text: 'BIRTHDAY', url: '', separatorBefore: '✦' });
   if (birthdays.length) {
-    items.push({ text: 'BIRTHDAY', url: '', separatorBefore: '✦' });
     items.push(...birthdays);
+  } else {
+    items.push({
+      text: '今日誕生日の探索者はいません',
+      url: '',
+      separatorBefore: '✧',
+    });
   }
 
   const anniversaries = await buildAnniversaryItems(sessionDataSource, today, warnings);
+  items.push({ text: "TODAY'S ANNIVERSARY", url: '', separatorBefore: '✦' });
   if (anniversaries.length) {
-    items.push({ text: "TODAY'S ANNIVERSARY", url: '', separatorBefore: '✦' });
     items.push(...anniversaries);
+  } else {
+    items.push({
+      text: '今日が記念日の卓報告はありません',
+      url: '',
+      separatorBefore: '✧',
+    });
   }
 
   const output = {
