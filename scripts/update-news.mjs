@@ -17,7 +17,7 @@ const DATABASES = {
   sessions: {
     id: '5664bd829fdf41ea947d8e9a185ff336',
     publicUrl: 'https://sarsland.notion.site/5664bd829fdf41ea947d8e9a185ff336?v=01dbf98ef9234f52a97e5c19fedaed08&pvs=73',
-    expectedProperties: ['DATE', 'ᴋᴇᴇᴘᴇʀ', 'ᴘʟᴀʏᴇʀ', 'ᴄᴏɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀꜱ', 'ɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀ'],
+    expectedProperties: ['ᴅᴀᴛᴇ', 'ᴋᴇᴇᴘᴇʀ', 'ᴘʟᴀʏᴇʀ', 'ᴄᴏɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀꜱ', 'ɪɴᴠᴇꜱᴛɪɢᴀᴛᴏʀ'],
   },
   birthdays: {
     id: 'c234406aa26944928077fb40d749a885',
@@ -311,19 +311,19 @@ async function buildBirthdayItems(dataSource, warnings) {
 }
 
 async function buildAnniversaryItems(dataSource, today, warnings) {
-  const dateType = dataSource.schema?.properties?.DATE?.type;
+  const dateType = dataSource.schema?.properties?.['ᴅᴀᴛᴇ']?.type;
   const dateFilter = dateType === 'formula'
-    ? { property: 'DATE', formula: { date: { is_not_empty: true } } }
-    : { property: 'DATE', date: { is_not_empty: true } };
+    ? { property: 'ᴅᴀᴛᴇ', formula: { date: { is_not_empty: true } } }
+    : { property: 'ᴅᴀᴛᴇ', date: { is_not_empty: true } };
   const queryBody = { filter: dateFilter };
-  // Formula DATE はソート可否が構成依存なので、通常の日付プロパティだけAPI側で降順にする。
-  if (dateType === 'date') queryBody.sorts = [{ property: 'DATE', direction: 'descending' }];
+  // Formula ᴅᴀᴛᴇ はソート可否が構成依存なので、通常の日付プロパティだけAPI側で降順にする。
+  if (dateType === 'date') queryBody.sorts = [{ property: 'ᴅᴀᴛᴇ', direction: 'descending' }];
   const pages = await queryAll(dataSource.id, queryBody);
   const titleName = titlePropertyName(dataSource.schema);
   const out = [];
 
   for (const page of pages) {
-    const dateProp = page.properties?.DATE;
+    const dateProp = page.properties?.['ᴅᴀᴛᴇ'];
     const dateValue = dateProp?.type === 'formula'
       ? dateProp?.formula?.date?.start
       : dateProp?.date?.start;
