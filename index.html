@@ -1712,7 +1712,7 @@ if (diceImage) {
 */
 const NEWS_FEED_URL = "news-feed.json";
 const NEWS_FALLBACK_ITEMS = [
-    { text: "Notion連携待機中 — TODAY'S SESSION と C/F RECORD がここに流れます" }
+    { text: "Notion連携の初回更新待ちです" }
 ];
 
 function normalizeNewsItems(payload) {
@@ -1720,10 +1720,11 @@ function normalizeNewsItems(payload) {
     if (!Array.isArray(raw)) return [];
     return raw
         .map(item => {
-            if (typeof item === "string") return { text: item, url: "" };
+            if (typeof item === "string") return { text: item, url: "", separatorBefore: "✦" };
             return {
                 text: String(item?.text ?? "").trim(),
-                url: String(item?.url ?? "").trim()
+                url: String(item?.url ?? "").trim(),
+                separatorBefore: String(item?.separatorBefore ?? "✦").trim()
             };
         })
         .filter(item => item.text);
@@ -1734,10 +1735,11 @@ function buildNewsTickerSet(items) {
     set.className = "news-ticker-set";
 
     items.forEach((item, index) => {
-        if (index > 0) {
+        const separator = index === 0 ? "" : (item.separatorBefore || "✦");
+        if (separator) {
             const sep = document.createElement("span");
             sep.className = "news-ticker-sep";
-            sep.textContent = "◆";
+            sep.textContent = separator;
             set.appendChild(sep);
         }
 
@@ -1754,6 +1756,13 @@ function buildNewsTickerSet(items) {
 
         set.appendChild(node);
     });
+
+    if (items.length) {
+        const tail = document.createElement("span");
+        tail.className = "news-ticker-sep";
+        tail.textContent = "✦";
+        set.appendChild(tail);
+    }
 
     return set;
 }
