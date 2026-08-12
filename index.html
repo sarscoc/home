@@ -1519,6 +1519,26 @@ a.news-ticker-item:focus-visible{
     filter:none !important;
 }
 
+
+
+/* ===== 2026-08-12 スマホ：選択肢を画面内に収める ===== */
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    #choiceBox{
+        /* スマホで実際に見えているゲーム幅を基準にする */
+        width:min(720px, calc(var(--mobile-content-width, 800px) - 120px)) !important;
+        max-width:calc(var(--mobile-content-width, 800px) - 120px) !important;
+        gap:10px !important;
+    }
+
+    .choice-btn{
+        min-height:68px !important;
+        padding:10px 26px !important;
+        font-size:34px !important;
+        line-height:1.35 !important;
+        font-weight:400 !important;
+    }
+}
+
 </style>
 </head>
 <body>
