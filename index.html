@@ -1078,6 +1078,350 @@ font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Ari
     object-fit:contain!important;
 }
 
+
+
+/* ===== SARSCOC NEWS：新幹線ニュース風テロップ ===== */
+#newsTicker{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:30px;
+    z-index:250;
+    display:none;
+    align-items:center;
+    overflow:hidden;
+    background:linear-gradient(90deg,rgba(9,13,18,.80),rgba(15,22,30,.70),rgba(9,13,18,.80));
+    border-bottom:1px solid rgba(255,255,255,.24);
+    box-shadow:0 3px 12px rgba(0,0,0,.15);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    color:#f4f8fb;
+    font-family:"M PLUS 1p","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;
+    font-size:17px;
+    line-height:1;
+    letter-spacing:.045em;
+    cursor:default;
+    user-select:none;
+    pointer-events:auto;
+}
+#newsTickerLabel{
+    position:relative;
+    z-index:2;
+    flex:0 0 auto;
+    height:100%;
+    display:flex;
+    align-items:center;
+    padding:0 16px 0 18px;
+    border-right:1px solid rgba(255,255,255,.24);
+    background:rgba(255,255,255,.10);
+    font-family:"Quicksand","M PLUS 1p",sans-serif;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:.16em;
+    white-space:nowrap;
+    text-shadow:0 1px 3px rgba(0,0,0,.65);
+}
+#newsTickerViewport{
+    position:relative;
+    flex:1 1 auto;
+    min-width:0;
+    height:100%;
+    overflow:hidden;
+    mask-image:linear-gradient(90deg,transparent 0,#000 24px,#000 calc(100% - 24px),transparent 100%);
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24px,#000 calc(100% - 24px),transparent 100%);
+}
+#newsTickerTrack{
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    width:max-content;
+    display:flex;
+    align-items:center;
+    will-change:transform;
+    animation:newsTickerFlow 38s linear infinite;
+}
+.news-ticker-set{
+    display:inline-flex;
+    align-items:center;
+    height:100%;
+    flex:0 0 auto;
+    white-space:nowrap;
+    padding-right:72px;
+}
+.news-ticker-item{
+    display:inline-flex;
+    align-items:center;
+    height:100%;
+    white-space:nowrap;
+    color:#f4f8fb;
+    text-decoration:none;
+    text-shadow:0 1px 3px rgba(0,0,0,.68);
+}
+a.news-ticker-item{
+    cursor:pointer;
+    border-bottom:1px solid transparent;
+    transition:color .14s ease,border-color .14s ease,background .14s ease;
+}
+a.news-ticker-item:hover,
+a.news-ticker-item:focus-visible{
+    color:#ffffff;
+    border-bottom-color:rgba(255,255,255,.85);
+    background:rgba(255,255,255,.08);
+    outline:none;
+}
+.news-ticker-sep{
+    display:inline-flex;
+    align-items:center;
+    height:100%;
+    margin:0 22px;
+    opacity:.68;
+    font-size:11px;
+}
+#newsTicker:hover #newsTickerTrack,
+#newsTicker:focus-within #newsTickerTrack{
+    animation-play-state:paused;
+}
+@keyframes newsTickerFlow{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+}
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    #newsTicker{
+        height:34px;
+        font-size:20px;
+    }
+    #newsTickerLabel{
+        display:none;
+    }
+    .news-ticker-sep{
+        margin:0 24px;
+    }
+}
+@media (prefers-reduced-motion:reduce){
+    #newsTickerTrack{animation:none!important;position:relative;overflow-x:auto;max-width:100%}
+}
+
+
+/* ===== テロップ最終配置：曜日クリックで収納 ⇄ びょーっと展開 ===== */
+#clockArea{
+    overflow:visible;
+}
+#clockBottomRow{
+    display:flex;
+    align-items:center;
+    gap:0;
+    width:max-content;
+    align-self:flex-start;
+    pointer-events:none;
+    isolation:isolate;
+}
+
+/* 曜日は短いカプセル。テロップの開閉ボタンも兼ねる */
+#clockBottomRow #clockDay{
+    position:relative;
+    z-index:3;
+    width:150px;
+    min-width:150px;
+    flex:0 0 150px;
+    margin:0;
+    cursor:pointer;
+    pointer-events:auto;
+    user-select:none;
+    transition:background .18s ease, transform .16s ease, box-shadow .18s ease;
+}
+#clockBottomRow #clockDay:hover,
+#clockBottomRow #clockDay:focus-visible{
+    background:rgba(255,255,255,.26);
+    outline:none;
+}
+#clockBottomRow #clockDay:active{
+    transform:scale(.975);
+}
+
+/* 黒帯は曜日の後ろへ隠れていて、open時だけ右へ伸びる */
+#clockBottomRow #newsTicker{
+    position:relative;
+    z-index:2;
+    top:auto;
+    left:auto;
+    display:flex!important;
+    width:0;
+    height:45px;
+    flex:0 0 auto;
+    margin-left:-12px;
+    overflow:hidden;
+    border:0 solid rgba(255,255,255,.90);
+    border-radius:0 30px 30px 0;
+    background:rgba(7,9,12,.90);
+    box-shadow:none;
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    font-size:19px;
+    opacity:0;
+    transform:scaleX(.02);
+    transform-origin:left center;
+    pointer-events:none;
+    transition:
+        width .58s cubic-bezier(.16,1,.3,1),
+        transform .58s cubic-bezier(.16,1,.3,1),
+        opacity .12s ease,
+        border-width .12s ease,
+        box-shadow .18s ease;
+}
+
+#clockBottomRow.ticker-open #newsTicker{
+    width:1580px;
+    border-width:2px;
+    opacity:1;
+    transform:scaleX(1);
+    box-shadow:0 4px 12px rgba(0,0,0,.24);
+    pointer-events:auto;
+}
+#clockBottomRow #newsTickerLabel{
+    display:none;
+}
+#clockBottomRow #newsTickerViewport{
+    width:100%;
+    height:100%;
+}
+#clockBottomRow #newsTickerTrack{
+    height:100%;
+}
+
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    #clockBottomRow #clockDay{
+        width:150px;
+        min-width:150px;
+        flex-basis:150px;
+        margin:0;
+    }
+    #clockBottomRow #newsTicker{
+        height:46px;
+        margin-left:-12px;
+        font-size:21px;
+    }
+    #clockBottomRow.ticker-open #newsTicker{
+        width:calc(var(--mobile-content-width, 1920px) - 302px);
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    #clockBottomRow #newsTicker{
+        transition:none!important;
+    }
+}
+
+
+
+/* ===== 2026-08-12 テロップ接合修正 + スマホUI白黒化 ===== */
+/* 曜日カプセルの下へ黒帯を潜り込ませない。接するだけにする */
+#clockBottomRow #newsTicker{
+    margin-left:0 !important;
+    background:#080a0d !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+#clockBottomRow.ticker-open #newsTicker{
+    width:1540px;
+    border-left-width:0;
+}
+
+/* スマホ：丸・カプセル系UIは「透けなし白 + 黒文字」 */
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    .ctrl-btn,
+    #costumeSelect,
+    #clockBottomRow #clockDay,
+    #openMenu,
+    #diceButton,
+    .menu-button,
+    .birthday-item,
+    .costume-option{
+        background:#ffffff !important;
+        color:#111111 !important;
+        border-color:#ffffff !important;
+        text-shadow:none !important;
+        backdrop-filter:none !important;
+        -webkit-backdrop-filter:none !important;
+    }
+
+    .ctrl-btn:hover,
+    #costumeSelect:hover,
+    #costumeSelect:focus,
+    #costumeSelect[aria-expanded="true"],
+    #clockBottomRow #clockDay:hover,
+    #clockBottomRow #clockDay:focus-visible,
+    #openMenu:hover,
+    #diceButton:hover,
+    .menu-button:hover,
+    .birthday-item:hover,
+    .costume-option:hover,
+    .costume-option:focus,
+    .costume-option.active{
+        background:#ffffff !important;
+        color:#111111 !important;
+    }
+
+    #costumeSelect::before{
+        color:#111111 !important;
+        text-shadow:none !important;
+    }
+
+    #clockBottomRow #newsTicker{
+        margin-left:0 !important;
+        background:#080a0d !important;
+    }
+    #clockBottomRow.ticker-open #newsTicker{
+        /* 右下の☰ボタンより十分手前で止める */
+        width:calc(var(--mobile-content-width, 1920px) - 340px);
+        border-left-width:0;
+    }
+}
+
+
+
+/* ===== 2026-08-12 テロップ接合：逆弧カット ===== */
+/*
+   曜日カプセルと黒帯を少し重ねつつ、黒帯の左端そのものを
+   半円状に透明にえぐる。これで「（ WED ））黒帯」の噛み合わせになる。
+*/
+#clockBottomRow #newsTicker{
+    /* 曜日の右端へ少し食い込ませる */
+    margin-left:-20px !important;
+
+    /* 左端中央を半円状に透明カット（背景画像がそのまま見える） */
+    -webkit-mask-image:
+        radial-gradient(circle 27px at 0 50%, transparent 0 25px, #000 26px);
+    mask-image:
+        radial-gradient(circle 27px at 0 50%, transparent 0 25px, #000 26px);
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-size:100% 100%;
+    mask-size:100% 100%;
+
+    border-left-width:0 !important;
+    border-radius:0 30px 30px 0 !important;
+}
+
+/* テロップ本文は逆弧に食い込まないよう少し右へ */
+#clockBottomRow #newsTickerViewport{
+    padding-left:18px;
+}
+
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    #clockBottomRow #newsTicker{
+        margin-left:-21px !important;
+        -webkit-mask-image:
+            radial-gradient(circle 28px at 0 50%, transparent 0 26px, #000 27px);
+        mask-image:
+            radial-gradient(circle 28px at 0 50%, transparent 0 26px, #000 27px);
+    }
+    #clockBottomRow #newsTickerViewport{
+        padding-left:19px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1088,7 +1432,8 @@ font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Ari
         <video id="backgroundVideo" autoplay muted loop playsinline preload="auto"></video>
         <img id="character" alt="">
         <img id="frame" alt="">
-        
+
+
         <!-- 左側操作コントロール -->
         <div id="leftControls">
             <a id="personalPage" class="ctrl-btn" href="#" target="_blank" rel="noopener" title="キャラクター個人ページ">PC PAGE</a>
@@ -1105,7 +1450,16 @@ font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Ari
         <div id="clockArea">
             <div id="clockTime"><span id="clockHour">--</span><span id="clockColon">:</span><span id="clockMinute">--</span></div>
             <div id="clockDate">----/-/--</div>
-            <div id="clockDay">---</div>
+            <div id="clockBottomRow">
+                <div id="clockDay" role="button" tabindex="0" aria-expanded="false" aria-controls="newsTicker" title="ニュースを収納 / 表示">---</div>
+                <!-- 曜日の横：新幹線ニュース風テロップ -->
+                <div id="newsTicker" aria-label="SARSCOC NEWS">
+                    <div id="newsTickerLabel">SARSCOC NEWS</div>
+                    <div id="newsTickerViewport">
+                        <div id="newsTickerTrack"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 右上メニューボタン -->
@@ -1232,12 +1586,132 @@ const clockMinute = document.getElementById("clockMinute");
 const clockColon = document.getElementById("clockColon");
 const clockDay = document.getElementById("clockDay");
 
+const newsTicker = document.getElementById("newsTicker");
+const newsTickerTrack = document.getElementById("newsTickerTrack");
+
 
 const diceButton = document.getElementById("diceButton");
 const diceImage = diceButton ? diceButton.querySelector("img") : null;
 if (diceImage) {
     diceImage.onerror = () => console.error("サイコロアイコン読み込み失敗: icon/dice.png");
 }
+
+
+
+/* ===== SARSCOC NEWS テロップ =====
+   GitHub上の news-feed.json を読み込みます。
+   URL付きの項目だけクリック可能で、Notionの公開ページなどへ飛ばせます。
+   news-feed.json がまだ無い間は接続待機メッセージを表示します。
+*/
+const NEWS_FEED_URL = "news-feed.json";
+const NEWS_FALLBACK_ITEMS = [
+    { text: "Notion連携待機中 — TODAY'S SESSION と C/F RECORD がここに流れます" }
+];
+
+function normalizeNewsItems(payload) {
+    const raw = Array.isArray(payload) ? payload : payload?.items;
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .map(item => {
+            if (typeof item === "string") return { text: item, url: "" };
+            return {
+                text: String(item?.text ?? "").trim(),
+                url: String(item?.url ?? "").trim()
+            };
+        })
+        .filter(item => item.text);
+}
+
+function buildNewsTickerSet(items) {
+    const set = document.createElement("div");
+    set.className = "news-ticker-set";
+
+    items.forEach((item, index) => {
+        if (index > 0) {
+            const sep = document.createElement("span");
+            sep.className = "news-ticker-sep";
+            sep.textContent = "◆";
+            set.appendChild(sep);
+        }
+
+        const node = item.url ? document.createElement("a") : document.createElement("span");
+        node.className = "news-ticker-item";
+        node.textContent = item.text;
+
+        if (item.url) {
+            node.href = item.url;
+            node.target = "_blank";
+            node.rel = "noopener noreferrer";
+            node.title = "Notionページを開く";
+        }
+
+        set.appendChild(node);
+    });
+
+    return set;
+}
+
+function renderNewsTicker(items) {
+    if (!newsTicker || !newsTickerTrack) return;
+    const safeItems = items.length ? items : NEWS_FALLBACK_ITEMS;
+
+    newsTickerTrack.replaceChildren();
+    const firstSet = buildNewsTickerSet(safeItems);
+    const secondSet = buildNewsTickerSet(safeItems);
+    secondSet.setAttribute("aria-hidden", "true");
+    newsTickerTrack.append(firstSet, secondSet);
+    newsTicker.style.display = "flex";
+
+    requestAnimationFrame(() => {
+        const width = firstSet.getBoundingClientRect().width;
+        const seconds = Math.max(20, Math.min(90, width / 58));
+        newsTickerTrack.style.animationDuration = `${seconds}s`;
+    });
+}
+
+async function loadNewsTicker() {
+    try {
+        const response = await fetch(`${NEWS_FEED_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`news-feed.json ${response.status}`);
+        const payload = await response.json();
+        renderNewsTicker(normalizeNewsItems(payload));
+    } catch (error) {
+        console.info("SARSCOC NEWS: news-feed.json はまだ未接続です", error);
+        renderNewsTicker(NEWS_FALLBACK_ITEMS);
+    }
+}
+
+if (newsTicker) {
+    ["click", "pointerdown", "touchstart"].forEach(type => {
+        newsTicker.addEventListener(type, event => event.stopPropagation());
+    });
+}
+
+/* 曜日を押すと、黒いニュース帯が曜日の後ろから伸び縮みする */
+const clockBottomRow = document.getElementById("clockBottomRow");
+function setTickerOpen(open) {
+    if (!clockBottomRow || !clockDay) return;
+    clockBottomRow.classList.toggle("ticker-open", open);
+    clockDay.setAttribute("aria-expanded", open ? "true" : "false");
+}
+function toggleTicker(event) {
+    if (event) event.stopPropagation();
+    const open = !clockBottomRow?.classList.contains("ticker-open");
+    setTickerOpen(open);
+}
+if (clockDay) {
+    ["pointerdown", "touchstart"].forEach(type => {
+        clockDay.addEventListener(type, event => event.stopPropagation());
+    });
+    clockDay.addEventListener("click", toggleTicker);
+    clockDay.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggleTicker(event);
+        }
+    });
+}
+setTickerOpen(true);
 
 /* 状態管理 */
 let characters = [];
@@ -1323,6 +1797,7 @@ function markSpecialUsed(kind) {
 /* 初期化 */
 async function init() {
     startClock();
+    loadNewsTicker();
 
     let characterError = null;
     let backgroundError = null;
@@ -3505,6 +3980,8 @@ if (diceButton) {
         await chooseRandomCharacter();
     };
 }
+
+setInterval(loadNewsTicker, 10 * 60 * 1000);
 
 /* 起動 */
 window.addEventListener("resize", () => { resizeGame(); applyMobileCharacterTransform(); });
