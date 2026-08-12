@@ -1422,6 +1422,45 @@ a.news-ticker-item:focus-visible{
     }
 }
 
+
+/* ===== 2026-08-12 曜日UI：元のサイズ・元の位置を完全維持 ===== */
+/*
+   テロップのために曜日側を縮めない。
+   元の #clockArea (230px) と #clockDay (width:100%) をそのまま基準にする。
+   テロップだけを右側へ伸縮させる。
+*/
+#clockBottomRow{
+    align-self:flex-start !important;
+}
+#clockBottomRow #clockDay{
+    width:230px !important;
+    min-width:230px !important;
+    max-width:230px !important;
+    flex:0 0 230px !important;
+    margin:0 !important;
+    padding:6px 0 !important;
+    font-size:26px !important;
+    line-height:1.1 !important;
+    border-width:2px !important;
+    border-radius:30px !important;
+}
+
+/* スマホでも曜日の寸法・位置は元UI基準のまま。色だけ白黒化を適用 */
+@media (max-width:768px), (max-aspect-ratio:82/100){
+    #clockBottomRow #clockDay{
+        width:230px !important;
+        min-width:230px !important;
+        max-width:230px !important;
+        flex-basis:230px !important;
+        padding:6px 0 !important;
+        font-size:26px !important;
+    }
+    /* 230pxの曜日から始まる分だけ、テロップは☰の手前で止まる長さに調整 */
+    #clockBottomRow.ticker-open #newsTicker{
+        width:calc(var(--mobile-content-width, 1920px) - 340px) !important;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1592,8 +1631,18 @@ const newsTickerTrack = document.getElementById("newsTickerTrack");
 
 const diceButton = document.getElementById("diceButton");
 const diceImage = diceButton ? diceButton.querySelector("img") : null;
+
+function updateDiceIconForViewport() {
+    if (!diceImage) return;
+    const mobile = window.innerWidth <= 768 || window.innerWidth / window.innerHeight < 0.82;
+    const nextSrc = mobile ? "icon/diceblack.png" : "icon/dice.png";
+    if (diceImage.getAttribute("src") !== nextSrc) {
+        diceImage.src = nextSrc;
+    }
+}
+
 if (diceImage) {
-    diceImage.onerror = () => console.error("サイコロアイコン読み込み失敗: icon/dice.png");
+    diceImage.onerror = () => console.error(`サイコロアイコン読み込み失敗: ${diceImage.getAttribute("src")}`);
 }
 
 
@@ -3984,8 +4033,13 @@ if (diceButton) {
 setInterval(loadNewsTicker, 10 * 60 * 1000);
 
 /* 起動 */
-window.addEventListener("resize", () => { resizeGame(); applyMobileCharacterTransform(); });
+window.addEventListener("resize", () => {
+    resizeGame();
+    applyMobileCharacterTransform();
+    updateDiceIconForViewport();
+});
 resizeGame();
+updateDiceIconForViewport();
 init();
 </script>
 </body>
