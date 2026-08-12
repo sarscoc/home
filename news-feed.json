@@ -1,12 +1,32 @@
 {
-  "generatedAt": "2026-08-12T12:52:06.517Z",
+  "generatedAt": "2026-08-12T12:58:26.191Z",
   "timeZone": "Asia/Tokyo",
   "date": "2026-08-12",
   "items": [
     {
-      "text": "2026 C/F RECORD ・・・ CRITICAL 54.1% / FUMBLE 45.9%",
+      "text": "SARS LAND ✦ 2026 C/F RECORD ─ CRITICAL 54.1% / FUMBLE 45.9%",
       "url": "https://sarsland.notion.site/1bb4fddb0aaa802a8cf1c7ccae521c68?v=1bb4fddb0aaa80339aa6000cc4c1a234&pvs=73",
       "separatorBefore": ""
+    },
+    {
+      "text": "BIRTHDAY",
+      "url": "",
+      "separatorBefore": "✦"
+    },
+    {
+      "text": "今日誕生日の探索者はいません",
+      "url": "",
+      "separatorBefore": "✧"
+    },
+    {
+      "text": "TODAY'S ANNIVERSARY",
+      "url": "",
+      "separatorBefore": "✦"
+    },
+    {
+      "text": "今日が記念日の卓報告はありません",
+      "url": "",
+      "separatorBefore": "✧"
     }
   ],
   "warnings": []
