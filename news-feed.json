@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-13T10:19:11.684Z",
+  "generatedAt": "2026-11-13T17:55:36.417Z",
   "timeZone": "Asia/Tokyo",
-  "date": "2026-11-13",
+  "date": "2026-11-14",
   "items": [
     {
       "text": "SARS LAND",
@@ -34,8 +34,13 @@
       "separatorBefore": "✦"
     },
     {
-      "text": "今日が記念日の卓報告はありません",
-      "url": "",
+      "text": "2022/11/14 - 11/20 じょはり #いおう #sars #聞口 歩見",
+      "url": "https://sarsland.notion.site/d5d83ba3c9f645a3a8cb57b5af2880f4",
+      "separatorBefore": "✧"
+    },
+    {
+      "text": "2019/11/14 零肺飛行 #ひらひら #sars #ひらひら #一 束",
+      "url": "https://sarsland.notion.site/6e15c8e707e04c5684cf4c3312683bb4",
       "separatorBefore": "✧"
     }
   ],
